@@ -37,8 +37,8 @@ class Memory():
 
         return out
     
-    def evaluate_expression(self, expression):
-        match expression:
+    def evaluate_expression(self, expr: expression):
+        match expr:
             case number(value):
                 return value
             case variable(name):
@@ -47,6 +47,40 @@ class Memory():
                 l = self.evaluate_expression(expr1)
                 r = self.evaluate_expression(expr2)
                 return f_bop(bop,l, r)
+            
+
+    def evaluate_binary_relation(self, relation: cond):
+        match relation:
+            case cond(var, "<=", num):
+                return self.get_memory(var) <= num
+            case cond(var, "<", num):
+                return self.get_memory(var) < num
+            case cond(var, ">=", num):
+                return self.get_memory(var) >= num
+            case cond(var, ">", num):
+                return self.get_memory(var) > num
+            
+    def evaluate_command(self, cmd: command):
+        match cmd:
+            case skip():
+                pass
+                #return self.states
+            case seq(c1, c2):
+                
+                self.evaluate_command(c1)
+                self.evaluate_command(c2)
+            case assign(var, expr):
+                self.set_memory(var, self.evaluate_expression(expr))
+            case input_command(var):
+                self.set_memory(var, 42)
+            case if_else(guard, c1, c2):
+                if self.evaluate_binary_relation(guard):
+                    self.evaluate_command(c1)
+                else:
+                    self.evaluate_command(c2)
+            case while_command(guard, c):
+                while self.evaluate_binary_relation(guard):
+                    self.evaluate_command(c)
 
 st.set_page_config(page_title="Static Analysis Tool", page_icon="ℹ️", layout="wide")
 
@@ -64,9 +98,14 @@ while (x < 100){
     x := x + y;
     y := y + 3
 }
+""",
+"""x := 0;
+while (x < 1000){
+    x := x + 1
+}
 """]
 
-display = ("Custom", "Example 0", "Example 1")
+display = ("Custom", "Example 0", "Example 1", "Example 2")
 
 options = list(range(len(display)))
 
@@ -79,10 +118,11 @@ run = st.button('Analyse')
 
 
 # BEGIN: Display Results
-m = Memory({'x': 1, 'y': 2})
+m = Memory({'x': 0, 'y': 0})
 if run:
-    
-   
-   result = parser.parse(code)
-   st.write(m.evaluate_expression(result))
-   #st.write(m)
+    try:
+        result = parser.parse(code)
+        m.evaluate_command(result)
+        st.write(m)
+    except Exception as e:
+        st.error(f"{e}")

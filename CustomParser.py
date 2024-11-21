@@ -51,7 +51,11 @@ class binaryOperation(expression):
     def __str__(self):
         return f"{self.expr1} {self.bop} {self.expr2}"
 
+@dataclass
 class cond():
+    var: variable
+    rel: str
+    num: number
     def __init__(self, var, rel, num):
         self.var = var
         self.rel = rel
@@ -64,35 +68,52 @@ class cond():
 class command():
     pass
 
+@dataclass
 class skip(command):
     def __init__(self):
         pass
     def __str__(self):
         return f"skip"
 
+@dataclass
 class seq(command):
+    c1: command
+    c2: command
+
     def __init__(self, c1, c2):
         self.c1 = c1
         self.c2 = c2
     def __str__(self):
         return f"{self.c1};{self.c2}"
-
+    
+@dataclass
 class assign(command):
+    var: variable
+    exp: expression
+
     def __init__(self, var, exp):
         self.var = var
         self.exp = exp
 
     def __str__(self):
         return f"{self.var} := {self.exp}"
-    
+
+@dataclass 
 class input_command(command):
+    var: variable
+
     def __init__(self, var):
         self.var = var
 
     def __str__(self):
         return f"input({self.var})"
-    
+
+@dataclass
 class if_else(command):
+    guard: cond
+    body1: command
+    body2: command
+
     def __init__(self, guard, body1, body2):
         self.guard = guard
         self.body1 = body1
@@ -100,7 +121,11 @@ class if_else(command):
     def __str__(self):
         return f'''if ({self.guard})\n {self.body1}\nelse\n {self.body2}'''
 
+@dataclass
 class while_command(command):
+    guard: cond
+    body: command
+
     def __init__(self, guard, body):
         self.guard = guard
         self.body = body
@@ -173,7 +198,7 @@ def p_expression_var(p):
 
 def p_expression_neg(p):
     '''expression : MINUS expression %prec UMINUS'''
-    p[0] = binaryOperation(p[1], 0, p[2])
+    p[0] = binaryOperation(p[1], number(0), p[2])
 
 def p_expression(p):
     '''expression : expression binaryOP expression'''
@@ -189,7 +214,7 @@ def p_binary_operator(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    raise SyntaxError(f"Syntax error in input!")
 
 # Build the parser
 parser = yacc.yacc(debug=True)

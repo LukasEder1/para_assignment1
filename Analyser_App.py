@@ -5,6 +5,7 @@ from CustomParser import *
 
 import streamlit as st
 
+# Call the function to get user input
 
 def f_bop(binOP, l, r):
     match binOP:
@@ -118,7 +119,9 @@ run = st.button('Analyse')
 
 
 # BEGIN: Display Results
+
 m = Memory({'x': 0, 'y': 0})
+
 if run:
     try:
         result = parser.parse(code)

@@ -1,0 +1,607 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DIVIDE
+    ID
+
+Grammar
+
+Rule 0     S' -> statement
+Rule 1     statement -> expression
+Rule 2     statement -> cond
+Rule 3     statement -> command
+Rule 4     command -> skip
+Rule 5     command -> command SEQ command
+Rule 6     command -> VAR ASSIGN expression
+Rule 7     command -> input LPAREN VAR RPAREN
+Rule 8     command -> if cond LCURL command RCURL else LCURL command RCURL
+Rule 9     command -> while cond LCURL command RCURL
+Rule 10    cond -> LPAREN VAR binaryREL NUMBER RPAREN
+Rule 11    binaryREL -> LEQ
+Rule 12    binaryREL -> LE
+Rule 13    binaryREL -> GE
+Rule 14    binaryREL -> GEQ
+Rule 15    expression -> NUMBER
+Rule 16    expression -> VAR
+Rule 17    expression -> expression binaryOP expression
+Rule 18    binaryOP -> PLUS
+Rule 19    binaryOP -> MINUS
+Rule 20    binaryOP -> TIMES
+
+Terminals, with rules where they appear
+
+ASSIGN               : 6
+DIVIDE               : 
+GE                   : 13
+GEQ                  : 14
+ID                   : 
+LCURL                : 8 8 9
+LE                   : 12
+LEQ                  : 11
+LPAREN               : 7 10
+MINUS                : 19
+NUMBER               : 10 15
+PLUS                 : 18
+RCURL                : 8 8 9
+RPAREN               : 7 10
+SEQ                  : 5
+TIMES                : 20
+VAR                  : 6 7 10 16
+else                 : 8
+error                : 
+if                   : 8
+input                : 7
+skip                 : 4
+while                : 9
+
+Nonterminals, with rules where they appear
+
+binaryOP             : 17
+binaryREL            : 10
+command              : 3 5 5 8 8 9
+cond                 : 2 8 9
+expression           : 1 6 17 17
+statement            : 0
+
+       : 1 6 17 18 18
+statement            : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . statement
+    (1) statement -> . expression
+    (2) statement -> . cond
+    (3) statement -> . command
+    (15) expression -> . NUMBER
+    (16) expression -> . VAR
+    (17) expression -> . MINUS expression
+    (18) expression -> . expression binaryOP expression
+    (10) cond -> . LPAREN VAR binaryREL NUMBER RPAREN
+    (4) command -> . skip
+    (5) command -> . command SEQ command
+    (6) command -> . VAR ASSIGN expression
+    (7) command -> . input LPAREN VAR RPAREN
+    (8) command -> . if cond LCURL command RCURL else LCURL command RCURL
+    (9) command -> . while cond LCURL command RCURL
+
+    NUMBER          shift and go to state 5
+    VAR             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    skip            shift and go to state 9
+    input           shift and go to state 10
+    if              shift and go to state 11
+    while           shift and go to state 12
+
+    statement                      shift and go to state 1
+    expression                     shift and go to state 2
+    cond                           shift and go to state 3
+    command                        shift and go to state 4
+
+state 1
+
+    (0) S' -> statement .
+
+
+
+state 2
+
+    (1) statement -> expression .
+    (18) expression -> expression . binaryOP expression
+    (19) binaryOP -> . PLUS
+    (20) binaryOP -> . MINUS
+    (21) binaryOP -> . TIMES
+
+    $end            reduce using rule 1 (statement -> expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+
+    binaryOP                       shift and go to state 13
+
+state 3
+
+    (2) statement -> cond .
+
+    $end            reduce using rule 2 (statement -> cond .)
+
+
+state 4
+
+    (3) statement -> command .
+    (5) command -> command . SEQ command
+
+    $end            reduce using rule 3 (statement -> command .)
+    SEQ             shift and go to state 17
+
+
+state 5
+
+    (15) expression -> NUMBER .
+
+    PLUS            reduce using rule 15 (expression -> NUMBER .)
+    MINUS           reduce using rule 15 (expression -> NUMBER .)
+    TIMES           reduce using rule 15 (expression -> NUMBER .)
+    $end            reduce using rule 15 (expression -> NUMBER .)
+    SEQ             reduce using rule 15 (expression -> NUMBER .)
+    RCURL           reduce using rule 15 (expression -> NUMBER .)
+
+
+state 6
+
+    (16) expression -> VAR .
+    (6) command -> VAR . ASSIGN expression
+
+    PLUS            reduce using rule 16 (expression -> VAR .)
+    MINUS           reduce using rule 16 (expression -> VAR .)
+    TIMES           reduce using rule 16 (expression -> VAR .)
+    $end            reduce using rule 16 (expression -> VAR .)
+    ASSIGN          shift and go to state 18
+
+
+state 7
+
+    (17) expression -> MINUS . expression
+    (15) expression -> . NUMBER
+    (16) expression -> . VAR
+    (17) expression -> . MINUS expression
+    (18) expression -> . expression binaryOP expression
+
+    NUMBER          shift and go to state 5
+    VAR             shift and go to state 20
+    MINUS           shift and go to state 7
+
+    expression                     shift and go to state 19
+
+state 8
+
+    (10) cond -> LPAREN . VAR binaryREL NUMBER RPAREN
+
+    VAR             shift and go to state 21
+
+
+state 9
+
+    (4) command -> skip .
+
+    SEQ             reduce using rule 4 (command -> skip .)
+    $end            reduce using rule 4 (command -> skip .)
+    RCURL           reduce using rule 4 (command -> skip .)
+
+
+state 10
+
+    (7) command -> input . LPAREN VAR RPAREN
+
+    LPAREN          shift and go to state 22
+
+
+state 11
+
+    (8) command -> if . cond LCURL command RCURL else LCURL command RCURL
+    (10) cond -> . LPAREN VAR binaryREL NUMBER RPAREN
+
+    LPAREN          shift and go to state 8
+
+    cond                           shift and go to state 23
+
+state 12
+
+    (9) command -> while . cond LCURL command RCURL
+    (10) cond -> . LPAREN VAR binaryREL NUMBER RPAREN
+
+    LPAREN          shift and go to state 8
+
+    cond                           shift and go to state 24
+
+state 13
+
+    (18) expression -> expression binaryOP . expression
+    (15) expression -> . NUMBER
+    (16) expression -> . VAR
+    (17) expression -> . MINUS expression
+    (18) expression -> . expression binaryOP expression
+
+    NUMBER          shift and go to state 5
+    VAR             shift and go to state 20
+    MINUS           shift and go to state 7
+
+    expression                     shift and go to state 25
+
+state 14
+
+    (19) binaryOP -> PLUS .
+
+    NUMBER          reduce using rule 19 (binaryOP -> PLUS .)
+    VAR             reduce using rule 19 (binaryOP -> PLUS .)
+    MINUS           reduce using rule 19 (binaryOP -> PLUS .)
+
+
+state 15
+
+    (20) binaryOP -> MINUS .
+
+    NUMBER          reduce using rule 20 (binaryOP -> MINUS .)
+    VAR             reduce using rule 20 (binaryOP -> MINUS .)
+    MINUS           reduce using rule 20 (binaryOP -> MINUS .)
+
+
+state 16
+
+    (21) binaryOP -> TIMES .
+
+    NUMBER          reduce using rule 21 (binaryOP -> TIMES .)
+    VAR             reduce using rule 21 (binaryOP -> TIMES .)
+    MINUS           reduce using rule 21 (binaryOP -> TIMES .)
+
+
+state 17
+
+    (5) command -> command SEQ . command
+    (4) command -> . skip
+    (5) command -> . command SEQ command
+    (6) command -> . VAR ASSIGN expression
+    (7) command -> . input LPAREN VAR RPAREN
+    (8) command -> . if cond LCURL command RCURL else LCURL command RCURL
+    (9) command -> . while cond LCURL command RCURL
+
+    skip            shift and go to state 9
+    VAR             shift and go to state 27
+    input           shift and go to state 10
+    if              shift and go to state 11
+    while           shift and go to state 12
+
+    command                        shift and go to state 26
+
+state 18
+
+    (6) command -> VAR ASSIGN . expression
+    (15) expression -> . NUMBER
+    (16) expression -> . VAR
+    (17) expression -> . MINUS expression
+    (18) expression -> . expression binaryOP expression
+
+    NUMBER          shift and go to state 5
+    VAR             shift and go to state 20
+    MINUS           shift and go to state 7
+
+    expression                     shift and go to state 28
+
+state 19
+
+    (17) expression -> MINUS expression .
+    (18) expression -> expression . binaryOP expression
+    (19) binaryOP -> . PLUS
+    (20) binaryOP -> . MINUS
+    (21) binaryOP -> . TIMES
+
+    PLUS            reduce using rule 17 (expression -> MINUS expression .)
+    MINUS           reduce using rule 17 (expression -> MINUS expression .)
+    TIMES           reduce using rule 17 (expression -> MINUS expression .)
+    $end            reduce using rule 17 (expression -> MINUS expression .)
+    SEQ             reduce using rule 17 (expression -> MINUS expression .)
+    RCURL           reduce using rule 17 (expression -> MINUS expression .)
+
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! TIMES           [ shift and go to state 16 ]
+
+    binaryOP                       shift and go to state 13
+
+state 20
+
+    (16) expression -> VAR .
+
+    PLUS            reduce using rule 16 (expression -> VAR .)
+    MINUS           reduce using rule 16 (expression -> VAR .)
+    TIMES           reduce using rule 16 (expression -> VAR .)
+    $end            reduce using rule 16 (expression -> VAR .)
+    SEQ             reduce using rule 16 (expression -> VAR .)
+    RCURL           reduce using rule 16 (expression -> VAR .)
+
+
+state 21
+
+    (10) cond -> LPAREN VAR . binaryREL NUMBER RPAREN
+    (11) binaryREL -> . LEQ
+    (12) binaryREL -> . LE
+    (13) binaryREL -> . GE
+    (14) binaryREL -> . GEQ
+
+    LEQ             shift and go to state 30
+    LE              shift and go to state 31
+    GE              shift and go to state 32
+    GEQ             shift and go to state 33
+
+    binaryREL                      shift and go to state 29
+
+state 22
+
+    (7) command -> input LPAREN . VAR RPAREN
+
+    VAR             shift and go to state 34
+
+
+state 23
+
+    (8) command -> if cond . LCURL command RCURL else LCURL command RCURL
+
+    LCURL           shift and go to state 35
+
+
+state 24
+
+    (9) command -> while cond . LCURL command RCURL
+
+    LCURL           shift and go to state 36
+
+
+state 25
+
+    (18) expression -> expression binaryOP expression .
+    (18) expression -> expression . binaryOP expression
+    (19) binaryOP -> . PLUS
+    (20) binaryOP -> . MINUS
+    (21) binaryOP -> . TIMES
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 18 (expression -> expression binaryOP expression .)
+    SEQ             reduce using rule 18 (expression -> expression binaryOP expression .)
+    RCURL           reduce using rule 18 (expression -> expression binaryOP expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+
+  ! PLUS            [ reduce using rule 18 (expression -> expression binaryOP expression .) ]
+  ! MINUS           [ reduce using rule 18 (expression -> expression binaryOP expression .) ]
+  ! TIMES           [ reduce using rule 18 (expression -> expression binaryOP expression .) ]
+
+    binaryOP                       shift and go to state 13
+
+state 26
+
+    (5) command -> command SEQ command .
+    (5) command -> command . SEQ command
+
+  ! shift/reduce conflict for SEQ resolved as shift
+    $end            reduce using rule 5 (command -> command SEQ command .)
+    RCURL           reduce using rule 5 (command -> command SEQ command .)
+    SEQ             shift and go to state 17
+
+  ! SEQ             [ reduce using rule 5 (command -> command SEQ command .) ]
+
+
+state 27
+
+    (6) command -> VAR . ASSIGN expression
+
+    ASSIGN          shift and go to state 18
+
+
+state 28
+
+    (6) command -> VAR ASSIGN expression .
+    (18) expression -> expression . binaryOP expression
+    (19) binaryOP -> . PLUS
+    (20) binaryOP -> . MINUS
+    (21) binaryOP -> . TIMES
+
+    SEQ             reduce using rule 6 (command -> VAR ASSIGN expression .)
+    $end            reduce using rule 6 (command -> VAR ASSIGN expression .)
+    RCURL           reduce using rule 6 (command -> VAR ASSIGN expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+
+    binaryOP                       shift and go to state 13
+
+state 29
+
+    (10) cond -> LPAREN VAR binaryREL . NUMBER RPAREN
+
+    NUMBER          shift and go to state 37
+
+
+state 30
+
+    (11) binaryREL -> LEQ .
+
+    NUMBER          reduce using rule 11 (binaryREL -> LEQ .)
+
+
+state 31
+
+    (12) binaryREL -> LE .
+
+    NUMBER          reduce using rule 12 (binaryREL -> LE .)
+
+
+state 32
+
+    (13) binaryREL -> GE .
+
+    NUMBER          reduce using rule 13 (binaryREL -> GE .)
+
+
+state 33
+
+    (14) binaryREL -> GEQ .
+
+    NUMBER          reduce using rule 14 (binaryREL -> GEQ .)
+
+
+state 34
+
+    (7) command -> input LPAREN VAR . RPAREN
+
+    RPAREN          shift and go to state 38
+
+
+state 35
+
+    (8) command -> if cond LCURL . command RCURL else LCURL command RCURL
+    (4) command -> . skip
+    (5) command -> . command SEQ command
+    (6) command -> . VAR ASSIGN expression
+    (7) command -> . input LPAREN VAR RPAREN
+    (8) command -> . if cond LCURL command RCURL else LCURL command RCURL
+    (9) command -> . while cond LCURL command RCURL
+
+    skip            shift and go to state 9
+    VAR             shift and go to state 27
+    input           shift and go to state 10
+    if              shift and go to state 11
+    while           shift and go to state 12
+
+    command                        shift and go to state 39
+
+state 36
+
+    (9) command -> while cond LCURL . command RCURL
+    (4) command -> . skip
+    (5) command -> . command SEQ command
+    (6) command -> . VAR ASSIGN expression
+    (7) command -> . input LPAREN VAR RPAREN
+    (8) command -> . if cond LCURL command RCURL else LCURL command RCURL
+    (9) command -> . while cond LCURL command RCURL
+
+    skip            shift and go to state 9
+    VAR             shift and go to state 27
+    input           shift and go to state 10
+    if              shift and go to state 11
+    while           shift and go to state 12
+
+    command                        shift and go to state 40
+
+state 37
+
+    (10) cond -> LPAREN VAR binaryREL NUMBER . RPAREN
+
+    RPAREN          shift and go to state 41
+
+
+state 38
+
+    (7) command -> input LPAREN VAR RPAREN .
+
+    SEQ             reduce using rule 7 (command -> input LPAREN VAR RPAREN .)
+    $end            reduce using rule 7 (command -> input LPAREN VAR RPAREN .)
+    RCURL           reduce using rule 7 (command -> input LPAREN VAR RPAREN .)
+
+
+state 39
+
+    (8) command -> if cond LCURL command . RCURL else LCURL command RCURL
+    (5) command -> command . SEQ command
+
+    RCURL           shift and go to state 42
+    SEQ             shift and go to state 17
+
+
+state 40
+
+    (9) command -> while cond LCURL command . RCURL
+    (5) command -> command . SEQ command
+
+    RCURL           shift and go to state 43
+    SEQ             shift and go to state 17
+
+
+state 41
+
+    (10) cond -> LPAREN VAR binaryREL NUMBER RPAREN .
+
+    $end            reduce using rule 10 (cond -> LPAREN VAR binaryREL NUMBER RPAREN .)
+    LCURL           reduce using rule 10 (cond -> LPAREN VAR binaryREL NUMBER RPAREN .)
+
+
+state 42
+
+    (8) command -> if cond LCURL command RCURL . else LCURL command RCURL
+
+    else            shift and go to state 44
+
+
+state 43
+
+    (9) command -> while cond LCURL command RCURL .
+
+    SEQ             reduce using rule 9 (command -> while cond LCURL command RCURL .)
+    $end            reduce using rule 9 (command -> while cond LCURL command RCURL .)
+    RCURL           reduce using rule 9 (command -> while cond LCURL command RCURL .)
+
+
+state 44
+
+    (8) command -> if cond LCURL command RCURL else . LCURL command RCURL
+
+    LCURL           shift and go to state 45
+
+
+state 45
+
+    (8) command -> if cond LCURL command RCURL else LCURL . command RCURL
+    (4) command -> . skip
+    (5) command -> . command SEQ command
+    (6) command -> . VAR ASSIGN expression
+    (7) command -> . input LPAREN VAR RPAREN
+    (8) command -> . if cond LCURL command RCURL else LCURL command RCURL
+    (9) command -> . while cond LCURL command RCURL
+
+    skip            shift and go to state 9
+    VAR             shift and go to state 27
+    input           shift and go to state 10
+    if              shift and go to state 11
+    while           shift and go to state 12
+
+    command                        shift and go to state 46
+
+state 46
+
+    (8) command -> if cond LCURL command RCURL else LCURL command . RCURL
+    (5) command -> command . SEQ command
+
+    RCURL           shift and go to state 47
+    SEQ             shift and go to state 17
+
+
+state 47
+
+    (8) command -> if cond LCURL command RCURL else LCURL command RCURL .
+
+    SEQ             reduce using rule 8 (command -> if cond LCURL command RCURL else LCURL command RCURL .)
+    $end            reduce using rule 8 (command -> if cond LCURL command RCURL else LCURL command RCURL .)
+    RCURL           reduce using rule 8 (command -> if cond LCURL command RCURL else LCURL command RCURL .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for PLUS in state 25 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 25 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 25 resolved as shift
+WARNING: shift/reduce conflict for SEQ in state 26 resolved as shift

@@ -49,7 +49,9 @@ class cond():
 
     def __str__(self):
         return f"{self.var} {self.rel} {self.num}"
- 
+    
+    def get_elements(self):
+        return (self.var, self.rel, self.num)
 
 class command():
     pass
@@ -104,6 +106,7 @@ class if_else(command):
         self.guard = guard
         self.body1 = body1
         self.body2 = body2
+        
     def __str__(self):
         return f'''if ({self.guard})\n {self.body1}\nelse\n {self.body2}'''
 

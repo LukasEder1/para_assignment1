@@ -2,7 +2,7 @@ from CustomLexer import MyLexer
 import my_lex
 import builtins
 from CustomParser import *
-
+from SignAbstraction import AbstractMemory
 import streamlit as st
 
 # Call the function to get user input
@@ -67,7 +67,6 @@ class Memory():
                 pass
                 #return self.states
             case seq(c1, c2):
-                
                 self.evaluate_command(c1)
                 self.evaluate_command(c2)
             case assign(var, expr):
@@ -82,6 +81,7 @@ class Memory():
             case while_command(guard, c):
                 while self.evaluate_binary_relation(guard):
                     self.evaluate_command(c)
+            
 
 st.set_page_config(page_title="Static Analysis Tool", page_icon="ℹ️", layout="wide")
 
@@ -119,13 +119,16 @@ run = st.button('Analyse')
 
 
 # BEGIN: Display Results
-
-m = Memory({'x': 0, 'y': 0})
-
+pre_condition = {'x': 10, 'y': 0}
+m = Memory(pre_condition)
+am = AbstractMemory(pre_condition)
 if run:
     try:
         result = parser.parse(code)
         m.evaluate_command(result)
         st.write(m)
+        am.evaluate_command(result)
+        st.write(am)
+
     except Exception as e:
         st.error(f"{e}")

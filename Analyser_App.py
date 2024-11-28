@@ -19,9 +19,11 @@ def f_bop(binOP, l, r):
 
     
 class Memory():
-    states = {}
+    
 
     def __init__(self, states=None):
+        states = {}
+        
         if states != None:
             self.states = states
 

@@ -1,7 +1,7 @@
 from CustomLexer import MyLexer
-import my_lex
+import MyLexer
 import builtins
-from CustomParser import *
+from MyParser import *
 from SignAbstraction import AbstractMemory
 from IntervalAbstraction import AbstractMemoryIntervals
 import streamlit as st

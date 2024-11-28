@@ -82,7 +82,8 @@ def p_expression_neg(p):
     if isinstance(p[2], number):
         p[0] = number(- p[2].value)
     else:
-        p[0] = binaryOperation(p[1], p[2], number(0))
+        p[0] = binaryOperation(p[1],  number(0), p[2])
+
 def p_expression(p):
     '''expression : expression binaryOP expression'''
     p[0] = binaryOperation(p[2], p[1], p[3])

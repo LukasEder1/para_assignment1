@@ -3,6 +3,7 @@ import my_lex
 import builtins
 from CustomParser import *
 from SignAbstraction import AbstractMemory
+from IntervalAbstraction import AbstractMemoryIntervals
 import streamlit as st
 
 # Call the function to get user input
@@ -87,10 +88,12 @@ st.set_page_config(page_title="Static Analysis Tool", page_icon="ℹ️", layout
 
 
 example_codes = ["",
-"""if (x <= 0){
-    y := -x
+"""x:=8;
+y:=1;
+if (x <= 0){
+    y := 0
 } else {
-   y  := x 
+   skip 
 }""",
 """input(x);
 y :=10;
@@ -114,7 +117,7 @@ selection = st.selectbox(
     'Choose a Code Example or try it with your own one.', options, format_func=lambda x: display[x])
 
 
-code = st.text_area('Older Version: ', example_codes[selection], height=400)
+code = st.text_area('Code: ', example_codes[selection], height=200)
 run = st.button('Analyse')
 
 
@@ -122,13 +125,16 @@ run = st.button('Analyse')
 pre_condition = {'x': 10, 'y': 0}
 m = Memory(pre_condition)
 am = AbstractMemory(pre_condition)
+am_i = AbstractMemoryIntervals(pre_condition)
 if run:
     try:
         result = parser.parse(code)
         m.evaluate_command(result)
         st.write(m)
         am.evaluate_command(result)
-        st.write(am)
+        st.write("Sign: ",am)
+        am_i.evaluate_command(result)
+        st.write("Interval: ", am_i)
 
-    except Exception as e:
+    except SyntaxError as e:
         st.error(f"{e}")

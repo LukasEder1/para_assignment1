@@ -1,4 +1,4 @@
-from CustomLexer import MyLexer
+
 import MyLexer
 import builtins
 from MyParser import *

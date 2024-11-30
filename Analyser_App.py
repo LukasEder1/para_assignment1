@@ -61,6 +61,6 @@ if run:
         st.write("Interval: ", am_i)
 
         st.write("Code was parsed as: ",result)
-        print(result)
+        
     except SyntaxError as e:
         st.error(f"{e}")

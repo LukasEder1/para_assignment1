@@ -8,9 +8,12 @@ from ConcreteSemantics import Memory
 
 import streamlit as st
 
+
+#st.header("These headers have rotating dividers", divider=True)
+
 # Call the function to get user input
 st.set_page_config(page_title="Static Analysis Tool", page_icon="ℹ️", layout="wide")
-
+st.header("blue[Static] Analysis Tool", divider=True)
 
 example_codes = ["",
 """x:=8;

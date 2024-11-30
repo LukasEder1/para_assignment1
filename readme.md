@@ -10,6 +10,9 @@ Additional Features:
 * Custom Parser and Lexer using the ply python package
 * Simple (Streamlit) Web-App, that can be used to analyse programs
 
+## Try it yourself (without local installation):
+<a href="https://static-analysis-tool.streamlit.app/"><strong>Open WebInterface »</strong></a>
+
 ## Installation
 
 

@@ -121,6 +121,35 @@ class AbstractMemoryIntervals:
     def negate_binary_relation(self, rel: str):
         return ">" if rel == "<=" else "<="
     
+    def nr_is_le(self, b):
+        r = True
+        for k, x in self.states.items():
+            r = r and self.inclusion(x, b.get_memory(k))
+
+            if not r:
+                break
+
+        return r
+
+
+    def compute_lfp(self, f):
+        a = AbstractMemoryIntervals(deepcopy(self.states))
+        #union_memory = AbstractMemoryIntervals(deepcopy(self.states))
+        next = f(a)
+        
+        while True:
+            
+            if a.nr_is_le(next):
+                break
+
+            for k, x in a.states.items():
+                a.states[k] = self.abstract_union(x, next.get_memory(k))
+
+            next = f(a)
+        
+        return a
+
+        
     def evaluate_command(self, cmd):
         if not self.is_bot(): # coalescent product
             match cmd:
@@ -146,3 +175,18 @@ class AbstractMemoryIntervals:
 
                     for k in self.states.keys():
                         self.states[k] = self.abstract_union(mem_if.get_memory(k), mem_else.get_memory(k))
+
+                case while_command(guard, c):
+                    print("not yet implemented")
+                    """
+                    def f_loop(self):
+                        mem_f = self.evaluate_filter(guard)
+                        mem_f.evaluate_command(c)
+                        return mem_f
+                    
+                    fixed_point = self.compute_lfp(f_loop)
+                    
+                    fixed_point.evaluate_filter(cond(guard.var, self.negate_binary_relation(guard.rel), guard.num))
+                    
+                    self.states = fixed_point.states
+                    """

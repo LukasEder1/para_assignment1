@@ -138,5 +138,7 @@ if run:
         am_i.evaluate_command(result)
         st.write("Interval: ", am_i)
 
+        st.write("Code was parsed as: ",result)
+
     except SyntaxError as e:
         st.error(f"{e}")

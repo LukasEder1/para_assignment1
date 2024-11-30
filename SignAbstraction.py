@@ -26,7 +26,10 @@ class AbstractMemory:
 
         if states != None:
             for k in states.keys():
-                self.states[k] = val_abs.TOP 
+                if isinstance(states[k], int):
+                    self.states[k] = val_abs.TOP
+                else:
+                    self.states[k] = states[k] 
 
         
 
@@ -132,7 +135,7 @@ class AbstractMemory:
 
     def evaluate_filter(self, guard: cond):
         result = self.val_sat(guard.rel, guard.num, self.get_memory(guard.var))
-        print(guard.rel, result)
+        
         filtered_states = deepcopy(self.states)
 
         if result == val_abs.BOT:
@@ -144,6 +147,33 @@ class AbstractMemory:
 
     def negate_binary_relation(self, rel: str):
         return ">" if rel == "<=" else "<="
+
+    def nr_is_le(self, b):
+        r = True
+        for k, x in self.states.items():
+            r = r and self.inclusion(x, b.get_memory(k))
+
+            if not r:
+                break
+
+        return r
+
+
+    def compute_lfp(self, f):
+        a = AbstractMemory(deepcopy(self.states))
+        
+        next = f(a)
+        
+        if a.nr_is_le(next):
+            
+            return a
+        else:
+            union_memory = AbstractMemory(deepcopy(self.states))
+
+            for k, x in a.states.items():
+                union_memory.states[k] = self.abstract_union(x, next.get_memory(k))
+            return union_memory.compute_lfp(f)
+
 
     def evaluate_command(self, cmd: command):
         if not self.is_bot():
@@ -162,12 +192,11 @@ class AbstractMemory:
                     self.set_memory(var, val_abs.TOP)
                     
                 case if_else(guard, c1, c2):
-                    print("=============")
-                    print(self.states)
+                    
                     mem_if = self.evaluate_filter(guard)
-                    print(mem_if)
+                    
                     mem_else = self.evaluate_filter(cond(guard.var, self.negate_binary_relation(guard.rel), guard.num))
-                    print(mem_else)
+                    
                     mem_if.evaluate_command(c1)
                     mem_else.evaluate_command(c2)
 
@@ -175,4 +204,14 @@ class AbstractMemory:
                         self.states[k] = self.abstract_union(mem_if.get_memory(k), mem_else.get_memory(k))
 
                 case while_command(guard, c):
-                    pass
+                    
+                    def f_loop(self):
+                        mem_f = self.evaluate_filter(guard)
+                        mem_f.evaluate_command(c)
+                        return mem_f
+                    
+                    fixed_point = self.compute_lfp(f_loop)
+                    
+                    fixed_point.evaluate_filter(cond(guard.var, self.negate_binary_relation(guard.rel), guard.num))
+                    
+                    self.states = fixed_point.states
